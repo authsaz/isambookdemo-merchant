@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+    <title>MerchanT</title>
+    <link rel="shortcut icon" href="">
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link href="/static/css/my.css" rel="stylesheet">
+
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+</head>
+<body >
+
+
+    <header>
+
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">MerchanT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+
+
+          </ul>
+      </nav>
+
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Hello, Customer!</h1>
+
+{% if session['access_token'] %}
+<p>
+Access token: <strong>{{session['access_token']}}</strong><br/>
+Refresh token: <strong>{{session['refresh_token']}}</strong> <br/>
+Expires in: <strong>{{session['expires_in']}}</strong> <br/>
+Token type: <strong>{{session['token_type']}}</strong> <br/>
+Scope: <strong>{{session['scope']}}</strong> <br/>
+</p>
+<p>
+    <a class="btn btn-danger btn-sm" href="#" id="btn_logout" role="button">Revoke Access And Logout</a> 
+    <a class="btn btn-warning btn-sm" href="#" id="btn_refresh" role="button">Refresh Token</a> 
+    <a class="btn btn-warning btn-sm" href="#" id="btn_me" role="button">Query Info</a>
+</p>
+    <div id="more_info"></div>
+
+{% endif %}
+
+          <p><a class="btn btn-info btn-lg" href="#" id="btn_oauth" role="button">Request Access</a>
+
+</p>
+        </div>
+      </div>
+
+      <div class="container">
+{% if session['access_token'] %}
+
+        <!-- Example row of columns -->
+        <div class="row">
+        <div class="col-md-4">
+            <h2>Accounts</h2>
+<form id="form_accounts">
+  <div class="form-group">
+    <label>User name</label>
+    <input type="text" class="form-control" id="username" name="username" >
+  </div>
+</form>
+<button class="btn btn-primary" id="btn_accounts">View Accounts</button>
+            
+          </div>
+          
+          <div class="col-md-4">
+            <h2>Balance</h2>
+<form id="form_balance">
+  <div class="form-group">
+    <label>Account Id</label>
+    <input type="text" class="form-control" id="acc_balance" name="acc_balance" >
+  </div>
+</form>
+<button class="btn btn-primary" id="btn_balance">View Balanace</button>
+            <div id="balnace_info"></div>
+          </div>
+          <div class="col-md-4">
+            <h2>Transfer</h2>
+
+
+<form id="form_transfer">
+  <div class="form-group">
+    <label>From Account Id</label>
+    <input type="text" class="form-control" id="acc_from" name="acc_from" >
+  </div>
+  <div class="form-group">
+    <label>To Account Id</label>
+    <input type="text" class="form-control" id="acc_to" name="acc_to" >
+  </div>
+  <div class="form-group">
+    <label>Amount</label>
+    <input type="text" class="form-control" id="amount" name="amount">
+  </div>
+</form>
+<button class="btn btn-primary" id="btn_transfer">Transfer Money</button>
+            <div id="transfer_info"></div>
+          </div>
+        </div>
+
+        <hr>
+{% endif %}
+
+      </div> <!-- /container -->
+
+    </main>  
+ 
+
+ 
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scroll" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Result</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-scroll">
+        <div id="detail-data"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+  <div class="modal fade" id="fail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scroll" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-scroll">
+        <div id="detail-data">
+            Not Permitted.
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="static/js/index.js"></script>
+<script>
+{% autoescape false %}
+    $("#btn_oauth").click(function(){
+
+        $.oauthpopup({
+            path: "{{oauth_url}}"
+        });
+
+    });
+{% endautoescape %}
+</script>
+</body>
+</html>
+

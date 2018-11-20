@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<body>
+  <p>Close this window to continue</p>
+  <script>
+  
+  {% autoescape false %}
+  var data = {{web_result}};
+  {% endautoescape %}
+  
+  window.opener.handle_popup_data(data);
+  
+  window.close();
+  </script>
+</body></html>
