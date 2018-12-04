@@ -32,8 +32,8 @@ app.config.update(
 )
 # Only for debugging
 #
-# proxies = {"http": "http://localhost:8080",
-#           "https": "http://localhost:8080"}
+# proxies = {"http": "http://192.168.0.1:8080",
+#           "https": "http://192.168.0.1:8080"}
 proxies = None
 
 def flat_multi(multidict):
@@ -61,7 +61,7 @@ def logout():
        header = {
           "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
        }
-       r = requests.post(SERVER_NAME_OAUTH_LOGOUT, headers = header, verify=False)
+       r = requests.post(SERVER_NAME_OAUTH_LOGOUT, headers = header, proxies=proxies, verify=False)
        session.clear()
        return "1"
     else:
@@ -82,7 +82,7 @@ def oauth_callback():
           "code": code,
           "grant_type": "authorization_code"
        }
-       r = requests.post(SERVER_NAME_OAUTH_TOKEN,headers = header,proxies=proxies, data=data, verify=False)
+       r = requests.post(SERVER_NAME_OAUTH_TOKEN, headers = header, proxies=proxies, data=data, verify=False)
        js = r.json()
        if "access_token" in js:
            session["access_token"] = js["access_token"]
@@ -123,7 +123,7 @@ def do_introspect():
           "client_secret": SECRET_KEY,
           "token": session["access_token"]
        }
-       r = requests.post(SERVER_NAME_OAUTH_INTROSPECT, data=data, headers = header, verify=False)
+       r = requests.post(SERVER_NAME_OAUTH_INTROSPECT, data=data, proxies=proxies, headers = header, verify=False)
        return r.text
     else:
        return Response(json.dumps({"error": "not logged in"}), content_type='appication/json') , 401
