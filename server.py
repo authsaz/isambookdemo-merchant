@@ -59,13 +59,15 @@ def index_page():
 def logout():
     if "access_token" in session:
        header = {
-          "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
+          "Content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+          'Authorization': 'Bearer ' + session["access_token"]
        }
-       r = requests.post(SERVER_NAME_OAUTH_LOGOUT, headers = header, proxies=proxies, verify=False)
+       r = requests.post(SERVER_NAME_OAUTH_LOGOUT, headers = header,proxies=proxies, verify=False)
        session.clear()
        return "1"
     else:
        return "0"
+
 
 @app.route('/callback', methods=['GET','POST'])
 def oauth_callback():
