@@ -101,13 +101,13 @@ def oauth_callback():
 @app.route('/apicallback', methods=['GET', 'POST'])	   
 def api_callback():
     params = flat_multi(request.values)
-    if "refferencekey" in params and "last_action" in session:
+    if "response" in params and "last_action" in session:
        headers = { 
                 'Authorization': 'Bearer ' + session["access_token"]
               }
        data = {
             "operation": "verify",
-            "ref_key": params["refferencekey"]
+            "response": params["response"]
        }
        r = requests.post(SERVER_VERIFY + session['last_action'], data=data, headers=headers, verify=False, proxies=proxies, allow_redirects=True)
        web_result = r.json()
@@ -204,18 +204,18 @@ def do_auth(req):
           }
     r =requests.get(SERVER_NAME_API + req.headers['location'], headers=headers, verify=False, proxies=proxies, allow_redirects=False)
     web_result = r.json()
-    if "reference_id" in web_result:
+    if "challenge" in web_result:
         session["last_action"] = web_result["action"]
         web_result = {
             "status": "auth-need", 
-            "url": SERVER_VERIFY + "/sps/authsvc?PolicyId={policy}&refid={refid}&callback={target}", 
+            "url": SERVER_VERIFY + "/sps/authsvc?PolicyId={policy}&challenge={challenge}&callback={target}", 
             "policy": web_result['policy_id'], 
             "target": API_CALLBACK_URL, 
-            "reference_id": web_result["reference_id"]
+            "challenge": web_result["challenge"]
          }
         return Response(json.dumps(web_result), content_type='appication/json')
     else:
-        return Response(json.dumps({"error": "reference_id not found"}), content_type='appication/json') , 578
+        return Response(json.dumps({"error": "challenge not found"}), content_type='appication/json') , 578
 
 @app.route('/transfer', methods=['POST'])
 def do_transfer():

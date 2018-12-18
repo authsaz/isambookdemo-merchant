@@ -52,7 +52,7 @@ function popitup(url,windowName) {
 			data: $("#form_accounts").serialize(),
             success: function(msg) { 
 			   if("status" in msg && msg["status"] == "auth-need"){
-                   var url = msg["url"].format({"policy":msg["policy"],"refid":msg["reference_id"],
+                   var url = msg["url"].format({"policy":msg["policy"],"token":msg["token"],
                             "target":msg["target"]})
 				   popitup( url);
 			   }else{
@@ -74,7 +74,7 @@ function popitup(url,windowName) {
 			data: $("#form_balance").serialize(),
             success: function(msg) { 
 			   if("status" in msg && msg["status"] == "auth-need"){
-                   var url = msg["url"].format({"policy":msg["policy"],"refid":msg["reference_id"],
+                   var url = msg["url"].format({"policy":msg["policy"],"token":msg["token"],
                             "target":msg["target"]})
 				   popitup( url);
 			   }else{
@@ -97,7 +97,7 @@ function popitup(url,windowName) {
             url: "/transfer",
             success: function(msg) {
                 if("status" in msg && msg["status"] == "auth-need"){
-                   var url = msg["url"].format({"policy":msg["policy"],"refid":msg["reference_id"],
+                   var url = msg["url"].format({"policy":msg["policy"],"token":msg["token"],
                             "target":msg["target"]})
 				   popitup( url);
 			   }else{
