@@ -188,7 +188,7 @@ def do_get_accounts():
        data = {
                'username': params['username']
            }
-       r = requests.post(SERVER_NAME_API + '/api/nf/get_account', data=json.dumps(data), headers=headers, verify=False, proxies=proxies, allow_redirects=False)
+       r = requests.post(SERVER_NAME_API + '/api/nf/accounts', data=json.dumps(data), headers=headers, verify=False, proxies=proxies, allow_redirects=False)
        if r.status_code == 302:
             return do_auth(r)
        else:
